@@ -1,0 +1,13 @@
+/.idea/
+!/.idea/codeStyles
+
+*.iml
+*.log
+**/target
+logs
+/.vscode
+
+node_modules/
+yarn.lock
+
+/config/application-local.properties
