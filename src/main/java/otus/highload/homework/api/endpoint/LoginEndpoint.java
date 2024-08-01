@@ -15,10 +15,12 @@ import otus.highload.homework.core.business.LoginService;
 @RequiredArgsConstructor
 public class LoginEndpoint {
 
+    @NonNull
     private final LoginService loginService;
 
     @PostMapping
     public LoginResponse loginUser(@NonNull @RequestBody LoginRequest loginRequest){
-        Optional loginService.tryLogin(loginRequest.userId(), loginRequest.password())
+        //Optional loginService.tryLogin(loginRequest.userId(), loginRequest.password())
+        return null;
     }
 }
