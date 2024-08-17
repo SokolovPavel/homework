@@ -11,6 +11,7 @@ import otus.highload.homework.api.schema.UserResponse;
 import otus.highload.homework.core.business.UserService;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
@@ -24,7 +25,7 @@ public class UserEndpoint {
     private final UserRegisterRequestToUserConverter userRegisterRequestToUserConverter;
 
     @GetMapping("/get/{id}")
-    public Optional<UserResponse> findUserById(@PathVariable @NonNull String id){
+    public Optional<UserResponse> findUserById(@PathVariable @NonNull UUID id){
         return userService.findById(id)
                 .map(userToUserResponseConverter::convert);
     }

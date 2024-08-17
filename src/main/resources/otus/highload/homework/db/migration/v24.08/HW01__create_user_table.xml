@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <property name="changesVersion" value="v24.04:UAD-1234" global="false"/>
+
+    <changeSet author="psokolov" id="${changesVersion}-Create_user_table">
+        <createTable tableName="user">
+            <column name="id" type="UUID">
+                <constraints primaryKeyName="PK_user" primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="TEXT"/>
+        </createTable>
+    </changeSet>
+
+
+</databaseChangeLog>
