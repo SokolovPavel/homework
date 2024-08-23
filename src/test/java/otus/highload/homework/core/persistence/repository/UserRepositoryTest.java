@@ -1,14 +1,18 @@
 package otus.highload.homework.core.persistence.repository;
 
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
-import org.junit.jupiter.api.Assertions;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import otus.highload.homework.core.persistence.entity.UserEntity;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @AutoConfigureEmbeddedDatabase(
@@ -25,14 +29,33 @@ class UserRepositoryTest {
     void saveAndFindById() {
         var user = new UserEntity();
         UUID userId = UUID.randomUUID();
-        user.setUserId(userId);
-        String userFirstName = "testUserName";
-        user.setFirstName(userFirstName);
+        user.setUserId(userId)
+                .setFirstName(RandomStringUtils.random(10))
+                .setSecondName(RandomStringUtils.random(10))
+                .setBiography(RandomStringUtils.random(10))
+                .setCity(RandomStringUtils.random(10))
+                .setBirthdate(LocalDate.ofEpochDay(ThreadLocalRandom.current().nextLong(1000, 10000)))
+                .setPassword(RandomStringUtils.random(10));
+
         userRepository.save(user);
         Optional<UserEntity> foundUserOptional = userRepository.findById(userId);
-        Assertions.assertTrue(foundUserOptional.isPresent());
-        Assertions.assertEquals(foundUserOptional.get().getUserId(), userId);
-        Assertions.assertEquals(foundUserOptional.get().getFirstName(), userFirstName);
+        assertThat(foundUserOptional)
+                .isPresent()
+                .get()
+                .extracting("userId",
+                        "firstName",
+                        "secondName",
+                        "biography",
+                        "city",
+                        "password",
+                        "birthdate")
+                .containsExactly(userId,
+                        user.getFirstName(),
+                        user.getSecondName(),
+                        user.getBiography(),
+                        user.getCity(),
+                        user.getPassword(),
+                        user.getBirthdate());
     }
 
 }

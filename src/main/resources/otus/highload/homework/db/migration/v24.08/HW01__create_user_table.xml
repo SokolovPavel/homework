@@ -11,6 +11,13 @@
                 <constraints primaryKeyName="PK_user" primaryKey="true" nullable="false"/>
             </column>
             <column name="first_name" type="TEXT"/>
+            <column name="second_name" type="TEXT"/>
+            <column name="biography" type="TEXT"/>
+            <column name="city" type="TEXT"/>
+            <column name="birth_date" type="date"/>
+            <column name="password" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
 

@@ -37,9 +37,23 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     @NonNull
     public UserEntity save(@NonNull UserEntity user) {
-        jdbcTemplate.update("INSERT INTO public.user(id, first_name) VALUES(?, ?)",
+        jdbcTemplate.update("""
+                        INSERT INTO public.user(id, 
+                            first_name, 
+                            second_name, 
+                            birth_date,
+                            biography,
+                            city, 
+                            password) 
+                        VALUES(?, ?, ?, ?, ?, ?, ?)
+                        """,
                 user.getUserId(),
-                user.getFirstName());
+                user.getFirstName(),
+                user.getSecondName(),
+                user.getBirthdate(),
+                user.getBiography(),
+                user.getCity(),
+                user.getPassword());
 
         return user;
     }
@@ -50,11 +64,12 @@ public class UserRepositoryImpl implements UserRepository {
         public UserEntity mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
             var userEntity = new UserEntity();
             userEntity.setUserId(UUID.fromString(rs.getString("id")))
-                    .setFirstName(rs.getString("first_name"));
-                    //.setSecondName(rs.getString("second_name"))
-                    //.setBirthdate(rs.getDate("birth_date").toLocalDate())
-                    //.setCity(rs.getString("city"))
-                    //.setBiography(rs.getString("biography"));
+                    .setFirstName(rs.getString("first_name"))
+                    .setPassword(rs.getString("password"))
+                    .setSecondName(rs.getString("second_name"))
+                    .setBirthdate(rs.getDate("birth_date").toLocalDate())
+                    .setCity(rs.getString("city"))
+                    .setBiography(rs.getString("biography"));
             return userEntity;
         }
     }

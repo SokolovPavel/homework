@@ -17,5 +17,6 @@ import otus.highload.homework.core.model.User;
 )
 public interface UserToUserResponseConverter {
     @NonNull
+    @SuppressWarnings("NullableProblems")
     UserResponse convert(@NonNull User user);
 }

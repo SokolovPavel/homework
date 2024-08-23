@@ -12,6 +12,10 @@ spring:
     change-log: classpath:/otus/highload/homework/db/migration/changelog-master.xml
     enabled: true
 
+security:
+  secretKey: dyErm4Znnzakye8EMiClx3ArD+f1WwHm4YRNd1HhqsVnVBNadCBueIU4mpO5TO42Q4n0rUQK2IKHO+E/rnmT1w==
+  expirationTimeMs: 10000000
+
 server:
   shutdown: graceful
   servlet:

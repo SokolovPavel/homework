@@ -16,9 +16,8 @@ import otus.highload.homework.core.model.User;
 public interface UserRegisterRequestToUserConverter {
 
     @NonNull
-    @Mapping(source = "first_name", target = "firstName")
-    @Mapping(source = "second_name", target = "secondName")
     @Mapping(target = "userId", ignore = true)
     @Mapping(target = "password", qualifiedBy = EncodedMapping.class)
+    @SuppressWarnings("NullableProblems")
     User convert(@NonNull UserRegisterRequest request);
 }

@@ -32,6 +32,7 @@ public class UserService {
     @NonNull
     public UUID register(@NonNull User user) {
         var userEntity = toEntityConverter.convert(user);
+        userEntity.setUserId(UUID.randomUUID());
         userEntity = userRepository.save(userEntity);
         return userEntity.getUserId();
     }

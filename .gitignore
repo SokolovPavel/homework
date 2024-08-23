@@ -9,5 +9,6 @@ logs
 
 node_modules/
 yarn.lock
-
+/build
+/.gradle
 /config/application-local.properties

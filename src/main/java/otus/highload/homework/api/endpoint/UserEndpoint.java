@@ -2,6 +2,7 @@ package otus.highload.homework.api.endpoint;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import otus.highload.homework.api.converter.UserRegisterRequestToUserConverter;
 import otus.highload.homework.api.converter.UserToUserResponseConverter;
@@ -25,13 +26,14 @@ public class UserEndpoint {
     private final UserRegisterRequestToUserConverter userRegisterRequestToUserConverter;
 
     @GetMapping("/get/{id}")
+    @PreAuthorize("hasRole('USER')")
     public Optional<UserResponse> findUserById(@PathVariable @NonNull UUID id){
         return userService.findById(id)
                 .map(userToUserResponseConverter::convert);
     }
 
     @PostMapping("/register")
-    public UserRegisterResponse registerUser(@RequestBody UserRegisterRequest request){
+    public UserRegisterResponse registerUser(@RequestBody @NonNull UserRegisterRequest request){
         var user = userRegisterRequestToUserConverter.convert(request);
         var userId = userService.register(user);
         return new UserRegisterResponse(userId);
