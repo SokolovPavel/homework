@@ -2,12 +2,7 @@ spring:
   application:
     name: Homework
   datasource:
-    url.jdbc: h2:file:C:/temp/test
-    username: sa
-    password:
-    driverClassName: org.h2.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    driver-class-name: org.postgresql.Driver
   liquibase:
     change-log: classpath:/otus/highload/homework/db/migration/changelog-master.xml
     enabled: true
@@ -22,4 +17,5 @@ server:
     encoding:
       charset: UTF-8
       force: true
+  port: 9000
 
