@@ -21,17 +21,25 @@ public class UserRepositoryImpl implements UserRepository {
     @NonNull
     private final JdbcTemplate jdbcTemplate;
 
+    private final UserEntityMapper userEntityMapper = new UserEntityMapper();
+
     @Override
     @NonNull
     public Optional<UserEntity> findById(@NonNull UUID userId) {
-        UserEntityMapper userEntityMapper = new UserEntityMapper();
         List<UserEntity> query = jdbcTemplate.query("SELECT * FROM public.user u WHERE u.id = ?",
                 userEntityMapper,
                 userId);
-        if(query.isEmpty()){
+        if (query.isEmpty()) {
             return Optional.empty();
         }
         return Optional.of(query.get(0));
+    }
+
+    @Override
+    @NonNull
+    public List<UserEntity> findAll() {
+        return jdbcTemplate.query("SELECT * FROM public.user u",
+                userEntityMapper);
     }
 
     @Override
@@ -56,6 +64,19 @@ public class UserRepositoryImpl implements UserRepository {
                 user.getPassword());
 
         return user;
+    }
+
+    @NonNull
+    @Override
+    public List<UserEntity> search(@NonNull String firstName, @NonNull String lastName) {
+        return jdbcTemplate.query("""
+                        SELECT * FROM public.user u
+                        WHERE u.first_name LIKE ? AND u.second_name LIKE ?
+                        ORDER BY u.id
+                        """,
+                userEntityMapper,
+                firstName + "%",
+                lastName + "%");
     }
 
     public static class UserEntityMapper implements RowMapper<UserEntity> {

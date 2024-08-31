@@ -12,3 +12,9 @@ docker-compose up
 
 Постман коллекция лежит в корне проекта:
 Homework1.postman_collection.json
+
+docker build -t util/user-loader .
+
+docker network create myNetwork
+docker network connect myNetwork web1
+docker network connect myNetwork web2

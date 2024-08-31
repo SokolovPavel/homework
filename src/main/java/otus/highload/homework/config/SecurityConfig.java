@@ -40,8 +40,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthTokenFilter authJwtTokenFilter(JwtUtils jwtUtils, UserDetailsService userDetailsService){
-        return new AuthTokenFilter(jwtUtils, userDetailsService);
+    public AuthTokenFilter authJwtTokenFilter(JwtUtils jwtUtils){
+        return new AuthTokenFilter(jwtUtils);
     }
 
     @Bean
@@ -56,6 +56,8 @@ public class SecurityConfig {
                 .sessionManagement(session-> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth->
                         auth.antMatchers("/user/register").permitAll()
+                                .antMatchers("/user/register/mass").permitAll()
+                                .antMatchers("/user/search").permitAll()
                                 .antMatchers("/user/get/**").hasRole("USER")
                                 .antMatchers("/login").permitAll()
                                 .anyRequest().authenticated())

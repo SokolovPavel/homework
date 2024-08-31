@@ -45,7 +45,7 @@ public class Resources {
     }
 
     @NonNull
-    private InputStream resourceAsStream(@NonNull String resource) {
+    public InputStream resourceAsStream(@NonNull String resource) {
         var resourcePath = path + resource;
         var stream = getClass().getClassLoader().getResourceAsStream(resourcePath);
         return Objects.requireNonNull(stream);

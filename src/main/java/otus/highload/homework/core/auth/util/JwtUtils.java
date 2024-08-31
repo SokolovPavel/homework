@@ -1,9 +1,6 @@
 package otus.highload.homework.core.auth.util;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.log4j.Log4j2;
@@ -31,6 +28,7 @@ public class JwtUtils {
         Date createdAt = new Date();
         return Jwts.builder()
                 .subject(user.getUsername())
+                .claim("ROLE", "ROLE_USER")
                 .issuedAt(createdAt)
                 .expiration(DateUtils.addMilliseconds(createdAt, jwtExpirationMs))
                 .signWith(key(), Jwts.SIG.HS256)
@@ -42,9 +40,18 @@ public class JwtUtils {
     }
 
     public String getUserNameFromJwtToken(String token){
-        return Jwts.parser().verifyWith(key()).build()
+        JwtParser jwtParser = Jwts.parser().verifyWith(key()).build();
+        return jwtParser
                 .parseSignedClaims(token)
                 .getPayload().getSubject();
+    }
+
+    public String getUserRoleFromJwtToken(String token){
+        JwtParser jwtParser = Jwts.parser().verifyWith(key()).build();
+        Claims payload = jwtParser
+                .parseSignedClaims(token)
+                .getPayload();
+        return payload.get("ROLE", String.class);
     }
 
     public boolean validateJwtToken(String token){

@@ -25,11 +25,11 @@ public class LoginEndpoint {
     JwtUtils jwtUtils;
 
     @PostMapping
-    public LoginResponse loginUser(@NonNull @RequestBody LoginRequest loginRequest){
+    @NonNull
+    public LoginResponse loginUser(@NonNull @RequestBody LoginRequest loginRequest) {
         var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.userId(), loginRequest.password()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         var token = jwtUtils.generateJwtToken(authentication);
-
         return new LoginResponse(token);
     }
 }

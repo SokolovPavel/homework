@@ -8,6 +8,8 @@ import org.springframework.lang.NonNull;
 import otus.highload.homework.api.schema.UserResponse;
 import otus.highload.homework.core.model.User;
 
+import java.util.List;
+
 @Mapper(
         componentModel = MappingConstants.ComponentModel.SPRING,
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
@@ -19,4 +21,7 @@ public interface UserToUserResponseConverter {
     @NonNull
     @SuppressWarnings("NullableProblems")
     UserResponse convert(@NonNull User user);
+
+    @NonNull
+    List<UserResponse> convertAll(@NonNull List<User> users);
 }
