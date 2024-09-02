@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -24,27 +23,28 @@ public class CsvFileToUserListConverter {
 
     @NonNull
     public List<User> convertAll(@NonNull InputStream is) {
+        var password = passwordEncoder.encode("password");
         try (BufferedReader bReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-             var csvParser = new CSVParser(bReader, CSVFormat.DEFAULT)) {
-            var stuList = new ArrayList<User>();
-            var csvRecords = csvParser.getRecords();
-            for (CSVRecord csvRecord : csvRecords) {
-                var secondFirstNameArray = csvRecord.get(0).split(" ");
-                var userBuilder = User.builder();
-                var user = userBuilder
-                        .firstName(secondFirstNameArray[1])
-                        .secondName(secondFirstNameArray[0])
-                        .password(passwordEncoder.encode(csvRecord.get(0)))
-                        .city(csvRecord.get(2))
-                        .biography("Registered from CSV user")
-                        .birthdate(LocalDate.parse(csvRecord.get(1)))
-                        .build();
 
-                stuList.add(user);
-            }
-            return stuList;
+             var csvParser = new CSVParser(bReader, CSVFormat.DEFAULT)) {
+            return csvParser.stream()
+                    .map(csvRecord -> mapToUser(password, csvRecord))
+                    .toList();
         } catch (IOException e) {
             throw new RuntimeException("CSV data is failed to parse: " + e.getMessage());
         }
+    }
+
+    @NonNull
+    private User mapToUser(String password, @NonNull CSVRecord csvRecord) {
+        var secondFirstNameArray = csvRecord.get(0).split(" ");
+        return User.builder()
+                .firstName(secondFirstNameArray[1])
+                .secondName(secondFirstNameArray[0])
+                .password(password)
+                .city(csvRecord.get(2))
+                .biography("Registered from CSV user")
+                .birthdate(LocalDate.parse(csvRecord.get(1)))
+                .build();
     }
 }

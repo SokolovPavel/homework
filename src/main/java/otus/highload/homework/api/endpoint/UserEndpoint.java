@@ -1,6 +1,7 @@
 package otus.highload.homework.api.endpoint;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -23,6 +24,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
+@Log4j2
 public class UserEndpoint {
 
     private final UserService userService;
@@ -49,8 +51,11 @@ public class UserEndpoint {
 
     @PostMapping("/register/mass")
     public ResponseEntity registerUser(@RequestParam("file") MultipartFile file) throws IOException {
+        log.info("mass register start");
         var users = csvFileToUserListConverter.convertAll(file.getInputStream());
+        log.info("input file converted");
         userService.registerAll(users);
+        log.info("done");
         return new ResponseEntity(HttpStatus.CREATED);
     }
 

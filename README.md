@@ -18,3 +18,6 @@ docker build -t util/user-loader .
 docker network create myNetwork
 docker network connect myNetwork web1
 docker network connect myNetwork web2
+
+Индекс для поиска:
+CREATE INDEX first_last_name_idx ON public.USER (first_name text_pattern_ops, second_name text_pattern_ops);

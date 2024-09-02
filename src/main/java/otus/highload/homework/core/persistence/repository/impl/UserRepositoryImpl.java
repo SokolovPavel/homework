@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import otus.highload.homework.core.persistence.entity.UserEntity;
 import otus.highload.homework.core.persistence.repository.UserRepository;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -64,6 +66,30 @@ public class UserRepositoryImpl implements UserRepository {
                 user.getPassword());
 
         return user;
+    }
+
+    @Override
+    @NonNull
+    public void saveAll(@NonNull List<UserEntity> users) {
+        jdbcTemplate.batchUpdate("""
+                        INSERT INTO public.user(id, 
+                            first_name, 
+                            second_name, 
+                            birth_date,
+                            biography,
+                            city, 
+                            password) 
+                        VALUES(?, ?, ?, ?, ?, ?, ?)
+                        """,
+                users, 500, (PreparedStatement ps, UserEntity user) -> {
+                    ps.setObject(1, user.getUserId());
+                    ps.setString(2, user.getFirstName());
+                    ps.setString(3, user.getSecondName());
+                    ps.setDate(4, Date.valueOf(user.getBirthdate()));
+                    ps.setString(5, user.getBiography());
+                    ps.setString(6, user.getCity());
+                    ps.setString(7, user.getPassword());
+                });
     }
 
     @NonNull

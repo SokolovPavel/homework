@@ -6,7 +6,19 @@ spring:
   liquibase:
     change-log: classpath:/otus/highload/homework/db/migration/changelog-master.xml
     enabled: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
 
+logging:
+  level:
+    otus:
+      highload:
+        homework:
+          api:
+            endpoint: INFO
 security:
   secretKey: dyErm4Znnzakye8EMiClx3ArD+f1WwHm4YRNd1HhqsVnVBNadCBueIU4mpO5TO42Q4n0rUQK2IKHO+E/rnmT1w==
   expirationTimeMs: 10000000

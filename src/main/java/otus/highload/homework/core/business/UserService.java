@@ -1,12 +1,14 @@
 package otus.highload.homework.core.business;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import otus.highload.homework.core.converter.UserFromEntityConverter;
 import otus.highload.homework.core.converter.UserToEntityConverter;
 import otus.highload.homework.core.model.User;
+import otus.highload.homework.core.persistence.entity.UserEntity;
 import otus.highload.homework.core.persistence.repository.UserRepository;
 
 import java.util.List;
@@ -15,6 +17,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class UserService {
 
     @NonNull
@@ -43,11 +46,14 @@ public class UserService {
     @NonNull
     @Transactional
     public void registerAll(@NonNull List<User> userList) {
-        for (User user : userList) {
+        List<UserEntity> userEntities = userList.stream().map(user -> {
             var userEntity = toEntityConverter.convert(user);
             userEntity.setUserId(UUID.randomUUID());
-            userRepository.save(userEntity);
-        }
+            return userEntity;
+        }).toList();
+        log.info("To entity converted");
+            userRepository.saveAll(userEntities);
+
     }
 
     @NonNull

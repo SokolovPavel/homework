@@ -84,7 +84,7 @@ class UserEndpointsTest {
                 .andExpect(status().isCreated());
 
         List<UserEntity> loadedUsers = userRepository.findAll();
-        Assertions.assertEquals(14, loadedUsers.size());
+        Assertions.assertEquals(2000, loadedUsers.size());
 
     }
 
