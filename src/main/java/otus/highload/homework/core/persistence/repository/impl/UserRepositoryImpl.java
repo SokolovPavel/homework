@@ -5,14 +5,17 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import otus.highload.homework.core.persistence.entity.UserEntity;
 import otus.highload.homework.core.persistence.repository.UserRepository;
 
+import javax.sql.DataSource;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,6 +31,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     @NonNull
     public Optional<UserEntity> findById(@NonNull UUID userId) {
+        TransactionSynchronizationManager.setCurrentTransactionReadOnly(true);
         List<UserEntity> query = jdbcTemplate.query("SELECT * FROM public.user u WHERE u.id = ?",
                 userEntityMapper,
                 userId);
@@ -40,6 +44,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     @NonNull
     public List<UserEntity> findAll() {
+        TransactionSynchronizationManager.setCurrentTransactionReadOnly(true);
         return jdbcTemplate.query("SELECT * FROM public.user u",
                 userEntityMapper);
     }
@@ -95,6 +100,7 @@ public class UserRepositoryImpl implements UserRepository {
     @NonNull
     @Override
     public List<UserEntity> search(@NonNull String firstName, @NonNull String lastName) {
+        TransactionSynchronizationManager.setCurrentTransactionReadOnly(true);
         return jdbcTemplate.query("""
                         SELECT * FROM public.user u
                         WHERE u.first_name LIKE ? AND u.second_name LIKE ?
@@ -103,6 +109,15 @@ public class UserRepositoryImpl implements UserRepository {
                 userEntityMapper,
                 firstName + "%",
                 lastName + "%");
+    }
+
+    private void setTransactionReadOnly() {
+        try {
+            DataSource dataSource = Objects.requireNonNull(jdbcTemplate.getDataSource());
+            dataSource.getConnection().setReadOnly(true);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static class UserEntityMapper implements RowMapper<UserEntity> {

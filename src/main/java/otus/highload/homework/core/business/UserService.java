@@ -30,12 +30,12 @@ public class UserService {
     private final UserRepository userRepository;
 
     @NonNull
+    @Transactional(readOnly = true)
     public Optional<User> findById(@NonNull UUID id) {
         return userRepository.findById(id).map(fromEntityConverter::convert);
     }
 
     @NonNull
-    @Transactional
     public UUID register(@NonNull User user) {
         var userEntity = toEntityConverter.convert(user);
         userEntity.setUserId(UUID.randomUUID());
@@ -44,7 +44,6 @@ public class UserService {
     }
 
     @NonNull
-    @Transactional
     public void registerAll(@NonNull List<User> userList) {
         List<UserEntity> userEntities = userList.stream().map(user -> {
             var userEntity = toEntityConverter.convert(user);
@@ -52,12 +51,12 @@ public class UserService {
             return userEntity;
         }).toList();
         log.info("To entity converted");
-            userRepository.saveAll(userEntities);
+        userRepository.saveAll(userEntities);
 
     }
 
     @NonNull
-    public List<User> search(@NonNull String firstName,@NonNull String lastName) {
+    public List<User> search(@NonNull String firstName, @NonNull String lastName) {
         var users = userRepository.search(firstName, lastName);
         return fromEntityConverter.convertAll(users);
     }

@@ -1,6 +1,6 @@
 /.idea/
 !/.idea/codeStyles
-
+volumes/
 *.iml
 *.log
 **/target

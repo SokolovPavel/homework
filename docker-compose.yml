@@ -1,25 +1,66 @@
 version: "3"
+
+networks:
+  pgnet:
+    external: true
+
 services:
   service:
     build: .
     ports:
       - 9001:9000
+    networks:
+      - pgnet
     depends_on:
-      - postgresql
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/homeworkdb
-      - SPRING_DATASOURCE_USERNAME=user
-      - SPRING_DATASOURCE_PASSWORD=pass
-  postgresql:
+      - postgres-master
+      - postgres-slave-1
+      - postgres-slave-2
+  postgres-master:
     image: postgres:13.3
+    networks:
+      - pgnet
     environment:
       POSTGRES_DB: "homeworkdb"
       POSTGRES_USER: "user"
       POSTGRES_PASSWORD: "pass"
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - ./volumes/pgmaster:/var/lib/postgresql/data
     ports:
       - "5433:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready homeworkdb" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  postgres-slave-1:
+    image: postgres:13.3
+    networks:
+      - pgnet
+    environment:
+      POSTGRES_DB: "homeworkdb"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "pass"
+    volumes:
+      - ./volumes/pgslave1:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready homeworkdb" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+  postgres-slave-2:
+    image: postgres:13.3
+    networks:
+      - pgnet
+    environment:
+      POSTGRES_DB: "homeworkdb"
+      POSTGRES_USER: "user"
+      POSTGRES_PASSWORD: "pass"
+    volumes:
+      - ./volumes/pgslave2:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready homeworkdb" ]
       interval: 5s

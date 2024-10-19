@@ -2,22 +2,22 @@ spring:
   application:
     name: Homework
   datasource:
-    write:
-      driver-class-name: org.postgresql.Driver
-      url: jdbc:postgresql://postgres-master:5432/homeworkdb
-      username: user
-      password: pass
-    read:
-      first:
+      write:
         driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://postgres-slave-1:5432/homeworkdb
+        url: jdbc:postgresql://localhost:5433/homeworkdb
         username: user
         password: pass
-      second:
-        driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://postgres-slave-2:5432/homeworkdb
-        username: user
-        password: pass
+      read:
+        first:
+          driver-class-name: org.postgresql.Driver
+          url: jdbc:postgresql://localhost:5434/homeworkdb
+          username: user
+          password: pass
+        second:
+          driver-class-name: org.postgresql.Driver
+          url: jdbc:postgresql://localhost:5435/homeworkdb
+          username: user
+          password: pass
   liquibase:
     change-log: classpath:/otus/highload/homework/db/migration/changelog-master.xml
     enabled: true
@@ -44,5 +44,5 @@ server:
     encoding:
       charset: UTF-8
       force: true
-  port: 9000
+  port: 9001
 

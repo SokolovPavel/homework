@@ -5,7 +5,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import otus.highload.homework.api.converter.CsvFileToUserListConverter;
@@ -20,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @RequestMapping("/user")
@@ -36,16 +36,17 @@ public class UserEndpoint {
     private final CsvFileToUserListConverter csvFileToUserListConverter;
 
     @GetMapping("/get/{id}")
-    @PreAuthorize("hasRole('USER')")
     public Optional<UserResponse> findUserById(@PathVariable @NonNull UUID id) {
         return userService.findById(id)
                 .map(userToUserResponseConverter::convert);
     }
 
+    AtomicInteger atomicInteger= new AtomicInteger();
     @PostMapping("/register")
     public UserRegisterResponse registerUser(@RequestBody @NonNull UserRegisterRequest request) {
         var user = userRegisterRequestToUserConverter.convert(request);
         var userId = userService.register(user);
+        log.info("user registered: " + atomicInteger.incrementAndGet());
         return new UserRegisterResponse(userId);
     }
 
