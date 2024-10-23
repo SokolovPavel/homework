@@ -124,7 +124,7 @@ class UserEndpointsTest {
 
     @Test
     @Sql("/api/login/insert-test-users.sql")
-    void SearchUsersReturnsAll() throws Exception {
+    void searchUsersReturnsAll() throws Exception {
 
         var perform = mvc.perform(get(SEARCH_URL).param("first_name", "te").param("last_name", "te"));
         perform

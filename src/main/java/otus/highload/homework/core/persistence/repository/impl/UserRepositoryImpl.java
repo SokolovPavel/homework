@@ -9,13 +9,11 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import otus.highload.homework.core.persistence.entity.UserEntity;
 import otus.highload.homework.core.persistence.repository.UserRepository;
 
-import javax.sql.DataSource;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -109,15 +107,6 @@ public class UserRepositoryImpl implements UserRepository {
                 userEntityMapper,
                 firstName + "%",
                 lastName + "%");
-    }
-
-    private void setTransactionReadOnly() {
-        try {
-            DataSource dataSource = Objects.requireNonNull(jdbcTemplate.getDataSource());
-            dataSource.getConnection().setReadOnly(true);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public static class UserEntityMapper implements RowMapper<UserEntity> {

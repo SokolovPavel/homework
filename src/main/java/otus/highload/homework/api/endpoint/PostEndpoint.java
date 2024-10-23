@@ -18,7 +18,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/post")
 @RequiredArgsConstructor
-public class PostController {
+public class PostEndpoint {
     @NonNull
     private final PostService postService;
 

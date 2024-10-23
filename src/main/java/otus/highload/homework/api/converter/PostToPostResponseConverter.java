@@ -1,9 +1,6 @@
 package otus.highload.homework.api.converter;
 
-import org.mapstruct.InjectionStrategy;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 import otus.highload.homework.api.schema.PostResponse;
 import otus.highload.homework.core.model.Post;
 
@@ -18,6 +15,8 @@ import java.util.Collection;
         uses = PasswordEncoderMapper.class
 )
 public interface PostToPostResponseConverter {
+    @Mapping(target = "id", source = "postId")
+    @Mapping(target = "authorUserId", source = "authorId")
     PostResponse convert(Post post);
 
     Collection<PostResponse> convertAll(Collection<Post> post);

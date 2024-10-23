@@ -16,7 +16,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/friend")
 @RequiredArgsConstructor
-public class FriendController {
+public class FriendEndpoint {
     @NonNull
     private final FriendService friendService;
 
@@ -27,7 +27,7 @@ public class FriendController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/detele/{userId}")
+    @PutMapping("/delete/{userId}")
     public ResponseEntity<Void> deleteFriend(@PathVariable("userId") UUID friendUserId, @AuthenticationPrincipal UserDetails userDetails) {
         var currentUserId = UUID.fromString(userDetails.getUsername());
         friendService.deleteFriend(currentUserId, friendUserId);

@@ -6,24 +6,17 @@ import lombok.experimental.Accessors;
 import org.springframework.lang.NonNull;
 
 import javax.validation.constraints.NotBlank;
-import java.time.Instant;
 import java.util.UUID;
 
 @Getter
 @Setter
 @Accessors(chain = true)
-public class PostEntity {
-
+public class FriendEntity {
     @NonNull
-    private UUID postId;
+    @NotBlank
+    private UUID userId;
 
     @NonNull
     @NotBlank
-    private UUID authorId;
-
-    @NonNull
-    private String text;
-
-    @NonNull
-    private Instant createdAt;
+    private UUID friendId;
 }

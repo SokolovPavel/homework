@@ -4,5 +4,6 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
 
     <include file="v24.08/changelog-all.xml" relativeToChangelogFile="true"/>
+    <include file="v24.10/changelog-all.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
