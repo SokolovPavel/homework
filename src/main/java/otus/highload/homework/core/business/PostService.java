@@ -8,6 +8,7 @@ import otus.highload.homework.core.model.Post;
 import otus.highload.homework.core.persistence.repository.PostRepository;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -20,24 +21,28 @@ public class PostService {
     @NonNull
     private final PostFromEntityConverter fromEntityConverter;
 
-    public void createPost(@NonNull UUID currentUserId, @NonNull String text) {
-        postRepository.createPost(currentUserId, text);
-        //TODO: implement
+    public UUID createPost(@NonNull UUID currentUserId, @NonNull String text) {
+        var post = postRepository.createPost(currentUserId, text);
+        return post.getId();
     }
 
-    public void updatePost(@NonNull UUID currentUserId, @NonNull UUID id, @NonNull String text) {
-        postRepository.updatePost(id, text);
+    public void updatePost(@NonNull UUID currentUserId, @NonNull UUID postId, @NonNull String text) {
+        if (postRepository.isPostOwner(currentUserId, postId)) {
+            postRepository.updatePost(postId, text);
+        }
 
     }
 
     public void deletePost(@NonNull UUID currentUserId, @NonNull UUID postId) {
-        postRepository.deletePost(postId);
+        if (postRepository.isPostOwner(currentUserId, postId)) {
+            postRepository.deletePost(postId);
+        }
     }
 
     @NonNull
-    public Post findPost(@NonNull UUID postId) {
-        var postEntity = postRepository.findById(postId);
-        return fromEntityConverter.convert(postEntity);
+    public Optional<Post> findPost(@NonNull UUID postId) {
+        var postEntityOptional = postRepository.findById(postId);
+        return postEntityOptional.map(fromEntityConverter::convert);
     }
 
     @NonNull

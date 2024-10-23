@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
+
+    <property name="changesVersion" value="v24.04:UAD-1234" global="false"/>
+
+    <changeSet author="psokolov" id="${changesVersion}-Create_friend_relation_table">
+        <createTable tableName="friend_relation">
+            <column name="user_id" type="UUID">
+                <constraints foreignKeyName="FK_user_id" referencedColumnNames="id" referencedTableName="user"
+                             nullable="false"/>
+            </column>
+            <column name="friend_id" type="UUID">
+                <constraints foreignKeyName="FK_friend_id" referencedColumnNames="id" referencedTableName="user"
+                             nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+
+</databaseChangeLog>

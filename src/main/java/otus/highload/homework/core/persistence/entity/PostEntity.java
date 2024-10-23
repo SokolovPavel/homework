@@ -15,7 +15,7 @@ import java.util.UUID;
 public class PostEntity {
 
     @NonNull
-    private UUID postId;
+    private UUID id;
 
     @NonNull
     @NotBlank
