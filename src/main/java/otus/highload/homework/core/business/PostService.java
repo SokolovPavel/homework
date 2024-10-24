@@ -8,7 +8,6 @@ import otus.highload.homework.core.model.Post;
 import otus.highload.homework.core.persistence.repository.PostRepository;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -40,13 +39,17 @@ public class PostService {
     }
 
     @NonNull
-    public Optional<Post> findPost(@NonNull UUID postId) {
+    public Post findPost(@NonNull UUID postId) {
         var postEntityOptional = postRepository.findById(postId);
-        return postEntityOptional.map(fromEntityConverter::convert);
+        return postEntityOptional.map(fromEntityConverter::convert).orElseThrow(EntityNotFoundException::new);
     }
 
     @NonNull
     public Collection<Post> findFeed(@NonNull UUID currentUserId, Integer offset, Integer limit) {
         return null; //TODO: implement
+    }
+
+    static class EntityNotFoundException extends RuntimeException {
+
     }
 }

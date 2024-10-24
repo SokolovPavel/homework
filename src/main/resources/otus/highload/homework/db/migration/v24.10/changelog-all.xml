@@ -4,5 +4,6 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd">
 
     <include file="HW04__create_friend_relation.xml" relativeToChangelogFile="true"/>
+    <include file="HW04__create_post_table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

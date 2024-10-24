@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import otus.highload.homework.core.persistence.entity.PostEntity;
 import otus.highload.homework.core.persistence.repository.PostRepository;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
@@ -37,7 +38,7 @@ public class PostRepositoryImpl implements PostRepository {
                 Map.of("id", postEntity.getId(),
                         "authorId", postEntity.getAuthorId(),
                         "text", postEntity.getText(),
-                        "createdAt", postEntity.getCreatedAt()));
+                        "createdAt", Timestamp.from(postEntity.getCreatedAt())));
         return postEntity;
     }
 

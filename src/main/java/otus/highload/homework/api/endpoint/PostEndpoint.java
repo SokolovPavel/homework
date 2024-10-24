@@ -26,13 +26,14 @@ public class PostEndpoint {
     private final PostToPostResponseConverter postToPostResponseConverter;
 
     @PostMapping("/create")
-    public ResponseEntity<Void> createPost(@RequestBody CreatePostRequest request, @AuthenticationPrincipal UserDetails userDetails) {
+    @NonNull
+    public UUID createPost(@RequestBody CreatePostRequest request, @AuthenticationPrincipal UserDetails userDetails) {
         var currentUserId = UUID.fromString(userDetails.getUsername());
-        postService.createPost(currentUserId, request.text());
-        return ResponseEntity.ok().build();
+        return postService.createPost(currentUserId, request.text());
     }
 
     @PutMapping("/update")
+    @NonNull
     public ResponseEntity<Void> updatePost(@RequestBody UpdatePostRequest request, @AuthenticationPrincipal UserDetails userDetails) {
         var currentUserId = UUID.fromString(userDetails.getUsername());
         postService.updatePost(currentUserId, request.id(), request.text());
