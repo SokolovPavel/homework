@@ -54,7 +54,9 @@ public class PostEndpoint {
     }
 
     @GetMapping("/feed")
-    public Collection<PostResponse> feedPage(@RequestParam("offset") Integer offset, @RequestParam("limit") Integer limit, @AuthenticationPrincipal UserDetails userDetails) {
+    public Collection<PostResponse> feedPage(@RequestParam(value = "offset", defaultValue = "0") Integer offset,
+                                             @RequestParam(value = "limit", defaultValue = "50") Integer limit,
+                                             @AuthenticationPrincipal UserDetails userDetails) {
         var currentUserId = UUID.fromString(userDetails.getUsername());
         var posts = postService.findFeed(currentUserId, offset, limit);
         return postToPostResponseConverter.convertAll(posts);

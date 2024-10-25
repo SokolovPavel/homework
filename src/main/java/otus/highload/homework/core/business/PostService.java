@@ -46,7 +46,8 @@ public class PostService {
 
     @NonNull
     public Collection<Post> findFeed(@NonNull UUID currentUserId, Integer offset, Integer limit) {
-        return null; //TODO: implement
+        var posts = postRepository.findPosts(currentUserId, offset, limit);
+        return fromEntityConverter.convertAll(posts);
     }
 
     static class EntityNotFoundException extends RuntimeException {

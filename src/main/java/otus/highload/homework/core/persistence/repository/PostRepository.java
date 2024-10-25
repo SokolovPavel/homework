@@ -3,6 +3,7 @@ package otus.highload.homework.core.persistence.repository;
 import org.springframework.lang.NonNull;
 import otus.highload.homework.core.persistence.entity.PostEntity;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,4 +18,7 @@ public interface PostRepository {
 
     @NonNull
     Optional<PostEntity> findById(@NonNull UUID postId);
+
+    @NonNull
+    List<PostEntity> findPosts(@NonNull UUID userId, @NonNull Integer offset, @NonNull Integer limit);
 }

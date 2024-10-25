@@ -1,6 +1,7 @@
 package otus.highload.homework.core.persistence.repository.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
@@ -9,6 +10,7 @@ import otus.highload.homework.core.persistence.repository.PostRepository;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -81,13 +83,30 @@ public class PostRepositoryImpl implements PostRepository {
         return Optional.ofNullable(jdbcTemplate.queryForObject("""
                 SELECT * FROM post
                 WHERE id = :id
-                """, Map.of("id", postId), (rs, num) -> {
+                """, Map.of("id", postId), getPostEntityRowMapper()));
+    }
+
+    @NonNull
+    @Override
+    public List<PostEntity> findPosts(@NonNull UUID userId, @NonNull Integer offset, @NonNull Integer limit) {
+        return jdbcTemplate.query("""
+                SELECT * FROM post
+                WHERE author_id IN ( SELECT friend_id FROM friend_relation WHERE user_id = :userId)
+                ORDER BY created_at DESC
+                LIMIT :limit OFFSET :offset
+                """, Map.of("userId", userId,
+                "limit", limit,
+                "offset", offset), getPostEntityRowMapper());
+    }
+
+    private RowMapper<PostEntity> getPostEntityRowMapper() {
+        return (rs, num) -> {
             var entity = new PostEntity();
             entity.setId(rs.getObject("id", UUID.class))
                     .setAuthorId(rs.getObject("author_id", UUID.class))
                     .setText(rs.getString("text"))
                     .setCreatedAt(rs.getTimestamp("created_at").toInstant());
             return entity;
-        }));
+        };
     }
 }

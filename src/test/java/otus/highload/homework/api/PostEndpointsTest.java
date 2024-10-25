@@ -42,6 +42,7 @@ class PostEndpointsTest {
     private static final String GET_URL = "/post/get/{id}";
     private static final String UPDATE_URL = "/post/update";
     private static final String DELETE_URL = "/post/delete/{id}";
+    private static final String FEED_URL = "/post/feed";
     private static final String LOGIN_URL = "/login";
     @Autowired
     MockMvc mvc;
@@ -115,6 +116,28 @@ class PostEndpointsTest {
                 .andExpect(jsonPath("$.id").value("8076b3bc-bfc7-458a-8d3d-c9c2e5436a85"))
                 .andExpect(jsonPath("$.text").value("Awesome post"))
                 .andExpect(jsonPath("$.author_user_id").value("8076b3bc-bfc7-458a-8d3d-c9c2e5436a83"));
+    }
+
+    @Test
+    @Sql("/api/post/insert-data-for-feed.sql")
+    void getPostFeedReturnsCorrectData() throws Exception {
+        var token = requestToken();
+        mvc.perform(get(FEED_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$[0].id").value("8076b3bc-bfc7-458a-8d3d-c9c2e0000006"))
+                .andExpect(jsonPath("$[0].text").value("Awesome post6"))
+                .andExpect(jsonPath("$[0].author_user_id").value("8076b3bc-bfc7-458a-8d3d-c9c2e5436a85"))
+                .andExpect(jsonPath("$[1].id").value("8076b3bc-bfc7-458a-8d3d-c9c2e0000005"))
+                .andExpect(jsonPath("$[1].text").value("Awesome post5"))
+                .andExpect(jsonPath("$[1].author_user_id").value("8076b3bc-bfc7-458a-8d3d-c9c2e5436a85"))
+                .andExpect(jsonPath("$[2].id").value("8076b3bc-bfc7-458a-8d3d-c9c2e0000004"))
+                .andExpect(jsonPath("$[2].text").value("Awesome post4"))
+                .andExpect(jsonPath("$[2].author_user_id").value("8076b3bc-bfc7-458a-8d3d-c9c2e5436a84"))
+                .andExpect(jsonPath("$[3].id").value("8076b3bc-bfc7-458a-8d3d-c9c2e0000003"))
+                .andExpect(jsonPath("$[3].text").value("Awesome post3"))
+                .andExpect(jsonPath("$[3].author_user_id").value("8076b3bc-bfc7-458a-8d3d-c9c2e5436a84"));
     }
 
     @NonNull
