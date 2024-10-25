@@ -48,7 +48,7 @@ public class PostRepositoryImpl implements PostRepository {
                 WHEN EXISTS(
                     SELECT 1 
                     FROM POST 
-                    WHERE user_id = :userId AND post_id = :postId
+                    WHERE author_id = :userId AND id = :postId
                 ) 
                 THEN TRUE ELSE FALSE END AS result
                 """, Map.of("userId", userId, "postId", postId), Boolean.class));
