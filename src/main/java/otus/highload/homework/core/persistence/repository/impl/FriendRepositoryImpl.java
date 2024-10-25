@@ -6,6 +6,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 import otus.highload.homework.core.persistence.repository.FriendRepository;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -38,5 +39,29 @@ public class FriendRepositoryImpl implements FriendRepository {
                 "friendId", friendUserId
         ));
         return updateCount == 1;
+    }
+
+    @NonNull
+    @Override
+    public List<UUID> findFriends(@NonNull UUID userId) {
+        return jdbcTemplate.queryForList("""
+                        SELECT friend_id from friend_relation
+                        WHERE user_id = :userId
+                        """,
+                Map.of("userId", userId),
+                UUID.class
+        );
+    }
+
+    @NonNull
+    @Override
+    public List<UUID> findSubscribers(@NonNull UUID userId) {
+        return jdbcTemplate.queryForList("""
+                        SELECT user_id from friend_relation
+                        WHERE friend_id = :userId
+                        """,
+                Map.of("userId", userId),
+                UUID.class
+        );
     }
 }

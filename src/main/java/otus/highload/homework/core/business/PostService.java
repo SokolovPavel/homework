@@ -5,6 +5,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import otus.highload.homework.core.converter.PostFromEntityConverter;
 import otus.highload.homework.core.model.Post;
+import otus.highload.homework.core.persistence.repository.FriendRepository;
 import otus.highload.homework.core.persistence.repository.PostRepository;
 
 import java.util.Collection;
@@ -18,23 +19,35 @@ public class PostService {
     private final PostRepository postRepository;
 
     @NonNull
+    private final FriendRepository friendRepository;
+
+    @NonNull
+    private final CachedFeedComponent cachedFeedService;
+
+    @NonNull
     private final PostFromEntityConverter fromEntityConverter;
 
-    public UUID createPost(@NonNull UUID currentUserId, @NonNull String text) {
-        var post = postRepository.createPost(currentUserId, text);
+    public UUID createPost(@NonNull UUID userId, @NonNull String text) {
+        var post = postRepository.createPost(userId, text);
+        friendRepository.findFriends(userId)
+                .forEach(cachedFeedService::evictUserFeed);
         return post.getId();
     }
 
-    public void updatePost(@NonNull UUID currentUserId, @NonNull UUID postId, @NonNull String text) {
-        if (postRepository.isPostOwner(currentUserId, postId)) {
+    public void updatePost(@NonNull UUID userId, @NonNull UUID postId, @NonNull String text) {
+        if (postRepository.isPostOwner(userId, postId)) {
             postRepository.updatePost(postId, text);
+            friendRepository.findFriends(userId)
+                    .forEach(cachedFeedService::evictUserFeed);
         }
 
     }
 
-    public void deletePost(@NonNull UUID currentUserId, @NonNull UUID postId) {
-        if (postRepository.isPostOwner(currentUserId, postId)) {
+    public void deletePost(@NonNull UUID userId, @NonNull UUID postId) {
+        if (postRepository.isPostOwner(userId, postId)) {
             postRepository.deletePost(postId);
+            friendRepository.findSubscribers(userId)
+                    .forEach(cachedFeedService::evictUserFeed);
         }
     }
 
@@ -46,8 +59,10 @@ public class PostService {
 
     @NonNull
     public Collection<Post> findFeed(@NonNull UUID currentUserId, Integer offset, Integer limit) {
-        var posts = postRepository.findPosts(currentUserId, offset, limit);
-        return fromEntityConverter.convertAll(posts);
+        return cachedFeedService.findFeed(currentUserId).stream()
+                .skip(offset)
+                .limit(limit)
+                .toList();
     }
 
     static class EntityNotFoundException extends RuntimeException {

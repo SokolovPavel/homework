@@ -109,6 +109,19 @@ public class UserRepositoryImpl implements UserRepository {
                 lastName + "%");
     }
 
+    /*
+    Имитация будто в физической модели хранится информация об активности пользователей
+    чтобы не загружать ленты всех пользователей
+     */
+    @Override
+    public Iterable<UUID> findTopActiveUserIds() {
+        return jdbcTemplate.queryForList("""
+                        SELECT id FROM public.user u
+                        LIMIT 10
+                        """,
+                UUID.class);
+    }
+
     public static class UserEntityMapper implements RowMapper<UserEntity> {
         @Override
         @NonNull

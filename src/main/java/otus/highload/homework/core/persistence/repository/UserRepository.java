@@ -22,4 +22,6 @@ public interface UserRepository {
     List<UserEntity> search(@NonNull String firstName, @NonNull String lastName);
 
     void saveAll(@NonNull List<UserEntity> userEntities);
+
+    Iterable<UUID> findTopActiveUserIds();
 }

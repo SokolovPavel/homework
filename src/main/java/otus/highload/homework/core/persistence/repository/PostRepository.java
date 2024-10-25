@@ -20,5 +20,5 @@ public interface PostRepository {
     Optional<PostEntity> findById(@NonNull UUID postId);
 
     @NonNull
-    List<PostEntity> findPosts(@NonNull UUID userId, @NonNull Integer offset, @NonNull Integer limit);
+    List<PostEntity> findFeed(@NonNull UUID userId, @NonNull Integer offset, @NonNull Integer limit);
 }

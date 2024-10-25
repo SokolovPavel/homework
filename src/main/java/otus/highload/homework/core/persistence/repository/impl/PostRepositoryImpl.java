@@ -88,7 +88,7 @@ public class PostRepositoryImpl implements PostRepository {
 
     @NonNull
     @Override
-    public List<PostEntity> findPosts(@NonNull UUID userId, @NonNull Integer offset, @NonNull Integer limit) {
+    public List<PostEntity> findFeed(@NonNull UUID userId, @NonNull Integer offset, @NonNull Integer limit) {
         return jdbcTemplate.query("""
                 SELECT * FROM post
                 WHERE author_id IN ( SELECT friend_id FROM friend_relation WHERE user_id = :userId)
