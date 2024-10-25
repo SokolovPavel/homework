@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.lang.NonNull;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -27,8 +28,7 @@ import java.util.UUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -131,28 +131,46 @@ class PostEndpointsTest {
 
     @Test
     @Sql("/api/post/insert-data-for-feed.sql")
+    @DirtiesContext
     void getPostFeedReturnsCorrectData() throws Exception {
         var token = requestToken();
-        getFeedRequest(token);
-
-        verify(postRepository, times(1)).findFeed(ArgumentMatchers.any(), eq(0), eq(1000));
+        mvc.perform(get(FEED_URL)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$[0].id").value("8076b3bc-bfc7-458a-8d3d-c9c2e0000006"))
+                .andExpect(jsonPath("$[0].text").value("Awesome post6"))
+                .andExpect(jsonPath("$[0].author_user_id").value("8076b3bc-bfc7-458a-8d3d-c9c2e5436a85"))
+                .andExpect(jsonPath("$[1].id").value("8076b3bc-bfc7-458a-8d3d-c9c2e0000005"))
+                .andExpect(jsonPath("$[1].text").value("Awesome post5"))
+                .andExpect(jsonPath("$[1].author_user_id").value("8076b3bc-bfc7-458a-8d3d-c9c2e5436a85"))
+                .andExpect(jsonPath("$[2].id").value("8076b3bc-bfc7-458a-8d3d-c9c2e0000004"))
+                .andExpect(jsonPath("$[2].text").value("Awesome post4"))
+                .andExpect(jsonPath("$[2].author_user_id").value("8076b3bc-bfc7-458a-8d3d-c9c2e5436a84"))
+                .andExpect(jsonPath("$[3].id").value("8076b3bc-bfc7-458a-8d3d-c9c2e0000003"))
+                .andExpect(jsonPath("$[3].text").value("Awesome post3"))
+                .andExpect(jsonPath("$[3].author_user_id").value("8076b3bc-bfc7-458a-8d3d-c9c2e5436a84"));
     }
 
     @Test
     @Sql("/api/post/insert-data-for-feed.sql")
+    @DirtiesContext
     void getPostFeedCached() throws Exception {
+        clearInvocations(postRepository);
         var token = requestToken();
-        getFeedRequest(token);
-        getFeedRequest(token);
-        getFeedRequest(token);
-        getFeedRequest(token);
+        getFeedRequest(token).andExpect(jsonPath("$", hasSize(4)));
+        getFeedRequest(token).andExpect(jsonPath("$", hasSize(4)));
+        getFeedRequest(token).andExpect(jsonPath("$", hasSize(4)));
+        getFeedRequest(token).andExpect(jsonPath("$", hasSize(4)));
 
         verify(postRepository, times(1)).findFeed(ArgumentMatchers.any(), eq(0), eq(1000));
     }
 
     @Test
     @Sql("/api/post/insert-data-for-feed.sql")
+    @DirtiesContext
     void getPostFeedInvalidatedAfterPostDelete() throws Exception {
+        clearInvocations(postRepository);
         var token = requestToken();
         getFeedRequest(token).andExpect(jsonPath("$", hasSize(4)));
         deletePostRequest(requestFriendToken(), "8076b3bc-bfc7-458a-8d3d-c9c2e0000006");
