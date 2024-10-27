@@ -6,7 +6,7 @@ networks:
 
 services:
   service:
-    build: .
+    build: ./feed-service
     ports:
       - 9001:9000
     networks:
