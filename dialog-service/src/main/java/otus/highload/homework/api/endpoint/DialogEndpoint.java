@@ -3,6 +3,8 @@ package otus.highload.homework.api.endpoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import otus.highload.homework.api.converter.DialogMessageToResponseConverter;
 import otus.highload.homework.api.schema.DialogMessageResponse;
@@ -24,15 +26,18 @@ public class DialogEndpoint {
     private final DialogMessageToResponseConverter dialogMessageToResponseConverter;
 
     @PostMapping("/{user_id}/send")
-    ResponseEntity<Void> sendMessage(@PathVariable("user_id") @NonNull UUID userId, SendMessageRequest request) {
-        var currentUserId = UUID.randomUUID();
+    ResponseEntity<Void> sendMessage(@PathVariable("user_id") @NonNull UUID userId,
+                                     @RequestBody SendMessageRequest request,
+                                     @AuthenticationPrincipal UserDetails userDetails) {
+        var currentUserId = UUID.fromString(userDetails.getUsername());
         dialogService.sendMessage(currentUserId, userId, request.text());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{user_id}/list")
-    List<DialogMessageResponse> getDialog(@PathVariable("user_id") @NonNull UUID userId) {
-        var currentUserId = UUID.randomUUID();
+    List<DialogMessageResponse> getDialog(@PathVariable("user_id") @NonNull UUID userId,
+                                          @AuthenticationPrincipal UserDetails userDetails) {
+        var currentUserId = UUID.fromString(userDetails.getUsername());
         var messages = dialogService.getMessages(currentUserId, userId);
         return dialogMessageToResponseConverter.convertAll(messages);
     }

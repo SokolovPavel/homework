@@ -33,7 +33,12 @@ dependencies {
     testImplementation 'io.zonky.test:embedded-database-spring-test:2.5.1'
     testImplementation 'io.zonky.test:embedded-postgres:2.0.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 }
 
 test {

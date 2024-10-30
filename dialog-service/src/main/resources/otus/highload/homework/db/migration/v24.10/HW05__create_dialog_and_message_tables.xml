@@ -10,10 +10,10 @@
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="fromId" type="UUID">
+            <column name="from_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="toId" type="UUID">
+            <column name="to_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -24,16 +24,16 @@
             <column name="id" type="UUID">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
-            <column name="dialogId" type="UUID">
+            <column name="dialog_id" type="UUID">
                 <constraints foreignKeyName="FK_dialog_id"
                              referencedColumnNames="id"
                              referencedTableName="dialog"
                              nullable="false"/>
             </column>
-            <column name="fromId" type="UUID">
+            <column name="from_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
-            <column name="toId" type="UUID">
+            <column name="to_id" type="UUID">
                 <constraints nullable="false"/>
             </column>
             <column name="text" type="text">
