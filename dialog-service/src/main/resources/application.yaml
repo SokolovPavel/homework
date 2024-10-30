@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: dialog-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgres-dialog:5432/dialogdb
+    username: user
+    password: pass
+  liquibase:
+    change-log: classpath:/otus/highload/homework/db/migration/changelog-master.xml
+    enabled: true
+server:
+  shutdown: graceful
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+  port: 9000
