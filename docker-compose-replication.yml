@@ -9,6 +9,8 @@ services:
     build: ./feed-service
     ports:
       - 9001:9000
+    environment:
+      - "SPRING_PROFILES_ACTIVE=replicating"
     networks:
       - pgnet
     depends_on:

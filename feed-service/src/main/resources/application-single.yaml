@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: Homework
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgres-feed:5432/homeworkdb
+    username: user
+    password: pass
+  liquibase:
+    change-log: classpath:/otus/highload/homework/db/migration/changelog-master.xml
+    enabled: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
+  data:
+    web:
+      pageable:
+        default-page-size: 20
+
+logging:
+  level:
+    otus:
+      highload:
+        homework:
+          api:
+            endpoint: INFO
+security:
+  secretKey: dyErm4Znnzakye8EMiClx3ArD+f1WwHm4YRNd1HhqsVnVBNadCBueIU4mpO5TO42Q4n0rUQK2IKHO+E/rnmT1w==
+  expirationTimeMs: 10000000
+
+server:
+  shutdown: graceful
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+  port: 9000
+

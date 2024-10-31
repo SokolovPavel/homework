@@ -5,6 +5,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import otus.highload.homework.core.persistence.entity.UserEntity;
 
 import java.time.LocalDate;
@@ -20,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
         provider = AutoConfigureEmbeddedDatabase.DatabaseProvider.ZONKY,
         refresh = AutoConfigureEmbeddedDatabase.RefreshMode.AFTER_EACH_TEST_METHOD
 )
+@ActiveProfiles("local")
 class UserRepositoryTest {
 
     @Autowired

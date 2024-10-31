@@ -2,11 +2,13 @@ package otus.highload.homework.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Log4j2
 @RequiredArgsConstructor
+@ConditionalOnProperty(prefix = "spring.datasource", name = "write")
 public class ReplicationRoutingDataSource extends AbstractRoutingDataSource {
 
     private final int readReplicasCount;

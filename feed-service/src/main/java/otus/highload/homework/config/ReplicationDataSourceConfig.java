@@ -1,5 +1,6 @@
 package otus.highload.homework.config;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
+@ConditionalOnProperty(prefix = "spring.datasource", name = "write")
 public class ReplicationDataSourceConfig {
 
     private static final int READ_REPLICAS_COUNT = 2;
