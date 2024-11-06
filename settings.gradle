@@ -1,4 +1,5 @@
 rootProject.name = 'homework'
 include 'feed-service'
 include 'dialog-service'
+include 'instant-feed-service'
 
