@@ -2,22 +2,10 @@ spring:
   application:
     name: Homework
   datasource:
-      write:
-        driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://localhost:5433/homeworkdb
-        username: user
-        password: pass
-      read:
-        first:
-          driver-class-name: org.postgresql.Driver
-          url: jdbc:postgresql://localhost:5434/homeworkdb
-          username: user
-          password: pass
-        second:
-          driver-class-name: org.postgresql.Driver
-          url: jdbc:postgresql://localhost:5435/homeworkdb
-          username: user
-          password: pass
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5433/homeworkdb
+    username: user
+    password: pass
   liquibase:
     change-log: classpath:/otus/highload/homework/db/migration/changelog-master.xml
     enabled: true
@@ -26,6 +14,15 @@ spring:
       enabled: true
       max-file-size: 100MB
       max-request-size: 100MB
+  kafka:
+    bootstrap-servers: host.docker.internal:29092,host.docker.internal:29093
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+kafka:
+  topics:
+    feed-topic: feed-posts
 
 logging:
   level:

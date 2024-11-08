@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: Homework
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      group-id: baeldung
+  liquibase:
+    change-log: classpath:/otus/highload/homework/db/migration/changelog-master.xml
+    enabled: false
+liquibase:
+  enabled: false
+test:
+  topic: embedded-test-topic
+
+logging:
+  level:
+    otus:
+      highload:
+        homework:
+          api:
+            endpoint: INFO
+
+server:
+  shutdown: graceful
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+  port: 9001
+

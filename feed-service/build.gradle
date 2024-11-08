@@ -5,6 +5,11 @@ plugins {
 
 apply plugin: 'io.spring.dependency-management'
 
+tasks.jar {
+    enabled = true
+    archiveClassifier.set("")
+}
+
 group 'org.example'
 version '1.0-SNAPSHOT'
 sourceCompatibility = '17'
@@ -23,6 +28,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.apache.commons:commons-csv:1.11.0'
+    implementation 'org.springframework.kafka:spring-kafka'
+
     runtimeOnly 'org.postgresql:postgresql'
 
     implementation 'org.liquibase:liquibase-core:4.29.1'
@@ -38,6 +45,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.zonky.test:embedded-database-spring-test:2.5.1'
     testImplementation 'io.zonky.test:embedded-postgres:2.0.0'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
 
     implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
