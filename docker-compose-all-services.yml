@@ -128,3 +128,17 @@ services:
       KAFKA_BROKERCONNECT: "kafka:29092"
     depends_on:
       - "kafka"
+  instant-feed-service:
+    build: ./instant-feed-service
+    ports:
+      - 9003:9003
+    networks:
+      - pgnet
+  web-socket-client:
+    build: ./web-socket-client
+    ports:
+      - 9004:9004
+    environment:
+      USER_ID: 10ad64d0-3bdb-4da7-ac09-5ce450c87dc1
+    networks:
+      - pgnet

@@ -1,0 +1,11 @@
+websocket:
+  connect-url: ws://instant-feed-service:9003/ws
+  subscribe-user-id: ${USER_ID}
+
+server:
+  shutdown: graceful
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+  port: 9004

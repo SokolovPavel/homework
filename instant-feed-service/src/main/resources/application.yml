@@ -1,3 +1,39 @@
 security:
   secretKey: dyErm4Znnzakye8EMiClx3ArD+f1WwHm4YRNd1HhqsVnVBNadCBueIU4mpO5TO42Q4n0rUQK2IKHO+E/rnmT1w==
   expirationTimeMs: 10000000
+spring:
+  application:
+    name: InstantFeedService
+  kafka:
+    # Адреса всех брокеров кластера
+    bootstrap-servers: kafka:29092,kafka2:29092
+    listener:
+      # Получение каждой записи должно быть подтверждено
+      ack-mode: record
+    consumer:
+      properties:
+        spring.json.trusted.packages: "otus.highload.homework.core.kafka"
+      group-id: instant-feed
+      # Сериализаторы для всех типов
+      keyDeserializer: org.apache.kafka.common.serialization.StringDeserializer
+      valueDeserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      enable-auto-commit: false
+      auto-offset-reset: latest
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG
+kafka:
+  topics:
+    feed-topic: feed-posts
+
+server:
+  shutdown: graceful
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+  port: 9003
