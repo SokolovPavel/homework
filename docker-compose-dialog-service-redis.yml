@@ -1,0 +1,11 @@
+version: "3"
+
+networks:
+  pgnet:
+    external: true
+
+services:
+  dialod-service:
+    build: ./dialog-service
+    ports:
+      - 9002:9000

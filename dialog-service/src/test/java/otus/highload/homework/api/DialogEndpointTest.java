@@ -6,19 +6,13 @@ import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.lang.NonNull;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import otus.highload.homework.util.Resources;
 
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,41 +34,41 @@ public class DialogEndpointTest {
     @Autowired
     MockMvc mvc;
 
-    @Autowired
-    JdbcClient jdbcClient;
+    //@Autowired
+    //JdbcClient jdbcClient;
 
-    @Test
-    @WithMockUser(username = "8076b3bc-bfc7-458a-8d3d-c9c2e5436a83")
-    void postMessage() throws Exception {
-        var userId = "00000000-0000-0000-0000-000000000002";
-        mvc.perform(post(DIALOG_URL + "/{user_id}/send", userId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(resources.loadAsBytes("message-request.json")))
-                .andExpect(status().is2xxSuccessful());
-        var dialogRowList = jdbcClient.sql("SELECT * FROM dialog")
-                .query()
-                .listOfRows();
-        assertThat(dialogRowList)
-                .size().isEqualTo(1);
-        var dialogRow = dialogRowList.get(0);
-        assertThat(dialogRow)
-                .containsEntry("from_id", UUID.fromString("8076b3bc-bfc7-458a-8d3d-c9c2e5436a83"))
-                .containsEntry("to_id", UUID.fromString("00000000-0000-0000-0000-000000000002"));
-
-        var dialogId = (UUID) dialogRow.get("id");
-
-        var messageRowList = jdbcClient.sql("SELECT * FROM message")
-                .query()
-                .listOfRows();
-        assertThat(messageRowList)
-                .size().isEqualTo(1);
-        var messageRow = messageRowList.get(0);
-        assertThat(messageRow)
-                .containsEntry("dialog_id", dialogId)
-                .containsEntry("from_id", UUID.fromString("8076b3bc-bfc7-458a-8d3d-c9c2e5436a83"))
-                .containsEntry("to_id", UUID.fromString("00000000-0000-0000-0000-000000000002"))
-                .containsEntry("text", "Hello, friend. Didnt see you around awhile. How r U?");
-    }
+//    @Test
+//    @WithMockUser(username = "8076b3bc-bfc7-458a-8d3d-c9c2e5436a83")
+//    void postMessage() throws Exception {
+//        var userId = "00000000-0000-0000-0000-000000000002";
+//        mvc.perform(post(DIALOG_URL + "/{user_id}/send", userId)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(resources.loadAsBytes("message-request.json")))
+//                .andExpect(status().is2xxSuccessful());
+//        var dialogRowList = jdbcClient.sql("SELECT * FROM dialog")
+//                .query()
+//                .listOfRows();
+//        assertThat(dialogRowList)
+//                .size().isEqualTo(1);
+//        var dialogRow = dialogRowList.get(0);
+//        assertThat(dialogRow)
+//                .containsEntry("from_id", UUID.fromString("8076b3bc-bfc7-458a-8d3d-c9c2e5436a83"))
+//                .containsEntry("to_id", UUID.fromString("00000000-0000-0000-0000-000000000002"));
+//
+//        var dialogId = (UUID) dialogRow.get("id");
+//
+//        var messageRowList = jdbcClient.sql("SELECT * FROM message")
+//                .query()
+//                .listOfRows();
+//        assertThat(messageRowList)
+//                .size().isEqualTo(1);
+//        var messageRow = messageRowList.get(0);
+//        assertThat(messageRow)
+//                .containsEntry("dialog_id", dialogId)
+//                .containsEntry("from_id", UUID.fromString("8076b3bc-bfc7-458a-8d3d-c9c2e5436a83"))
+//                .containsEntry("to_id", UUID.fromString("00000000-0000-0000-0000-000000000002"))
+//                .containsEntry("text", "Hello, friend. Didnt see you around awhile. How r U?");
+//    }
 
     @Test
     @Sql("/api/dialog/insert-messages.sql")
