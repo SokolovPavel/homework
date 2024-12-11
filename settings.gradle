@@ -3,4 +3,5 @@ include 'feed-service'
 include 'dialog-service'
 include 'instant-feed-service'
 include 'web-socket-client'
+include 'api-gateway'
 

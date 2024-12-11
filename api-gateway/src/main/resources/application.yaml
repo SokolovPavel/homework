@@ -1,0 +1,14 @@
+server:
+  port: 8000
+
+infrastructure:
+  userServiceHost:
+    http://localhost:9001
+  dialogServiceHost:
+    http://localhost:9002
+  postServiceHost:
+    http://localhost:9001
+  loginServiceHost:
+    http://localhost:9001
+  friendServiceHost:
+    http://localhost:9001
